@@ -1,3 +1,4 @@
+
 # ProjectSpring
 # Functional Requirements
 
@@ -93,31 +94,39 @@
    - **Метод**: POST
    - **Ендпоінт**: /api/users/register
    - **Тіло запиту**:
+     ```
      {
        "firstName": "string",
        "lastName": "string",
        "email": "string",
        "password": "string"
      }
+     ```
    - **Відповідь**:
+     ```
      {
        "userId": "int",
        "message": "string"
      }
+     ```
 
 2. **"Вхід користувача" / "Login User"**
    - **Метод**: POST
    - **Ендпоінт**: /api/users/login
    - **Тіло запиту**:
+     ```
      {
        "email": "string",
        "password": "string"
      }
+     ```
    - **Відповідь**:
+     ```
      {
        "token": "string",
        "message": "string"
      }
+     ```
 
 #### "Управління анкетами" / "Survey Management"
 
@@ -125,42 +134,55 @@
    - **Метод**: POST
    - **Ендпоінт**: /api/surveys
    - **Тіло запиту**:
+     ```
      {
        "title": "string",
        "description": "string"
      }
+     ```
    - **Відповідь**:
+     ```
      {
        "surveyId": "int",
        "message": "string"
      }
+     ```
 
 4. **"Додати запитання до анкети" / "Add Question to Survey"**
    - **Метод**: POST
    - **Ендпоінт**: /api/surveys/{surveyId}/questions
    - **Тіло запиту**:
+     ```
      {
        "questionText": "string",
        "questionType": "string"
      }
+     ```
    - **Відповідь**:
+     ```
      {
-       "questionId": "int",
+      
+
+ "questionId": "int",
        "message": "string"
      }
+     ```
 
 5. **"Призначення анкети студентам" / "Assign Survey to Students"**
    - **Метод**: POST
    - **Ендпоінт**: /api/surveys/{surveyId}/assign
    - **Тіло запиту**:
+     ```
      {
        "studentIds": ["int"]
      }
      ```
    - **Відповідь**:
+     ```
      {
        "message": "string"
      }
+     ```
 
 #### "Участь у анкетуванні" / "Survey Participation"
 
@@ -168,6 +190,7 @@
    - **Метод**: GET
    - **Ендпоінт**: /api/students/{studentId}/surveys
    - **Відповідь**:
+     ```
      {
        "surveys": [
          {
@@ -177,11 +200,13 @@
          }
        ]
      }
+     ```
 
 7. **"Надіслати відповіді на анкету" / "Submit Survey Responses"**
    - **Метод**: POST
    - **Ендпоінт**: /api/students/{studentId}/surveys/{surveyId}/responses
    - **Тіло запиту**:
+     ```
      {
        "responses": [
          {
@@ -190,10 +215,13 @@
          }
        ]
      }
+     ```
    - **Відповідь**:
+     ```
      {
        "message": "string"
      }
+     ```
 
 #### "Аналіз відповідей та експорт" / "Response Analysis and Export"
 
@@ -201,6 +229,7 @@
    - **Метод**: GET
    - **Ендпоінт**: /api/surveys/{surveyId}/results
    - **Відповідь**:
+     ```
      {
        "results": [
          {
@@ -214,6 +243,7 @@
          }
        ]
      }
+     ```
 
 9. **"Експорт даних анкети" / "Export Survey Data"**
    - **Метод**: GET
@@ -226,16 +256,20 @@
     - **Метод**: POST
     - **Ендпоінт**: /api/notifications/reminder
     - **Тіло запиту**:
+      ```
       {
         "studentId": "int",
         "surveyId": "int",
         "message": "string"
       }
+      ```
     - **Відповідь**:
+      ```
       {
         "message": "string"
       }
+      ```
+
 ## ER DIAGRAM
 
 ![ER Diagram](./ER-Diagram.png)
-
