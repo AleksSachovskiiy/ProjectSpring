@@ -86,154 +86,221 @@
     - Система обмежує доступ до даних лише авторизованим користувачам відповідно до їхніх ролей.
 
 # REST API анкетування в університеті для студентів
+## Користувачі (Users)
 
-#### "Реєстрація та вхід користувачів" / "User Registration and Login"
+### Реєстрація користувача (User Registration)
 
-1. **"Реєстрація користувача" / "Register User"**
-   - **Метод**: POST
-   - **Ендпоінт**: /api/users/register
-   - **Тіло запиту**:
-     {
-       "firstName": "string",
-       "lastName": "string",
-       "email": "string",
-       "password": "string"
-     }
-   - **Відповідь**:
-     {
-       "userId": "int",
-       "message": "string"
-     }
+**Метод:** POST  
+**URL:** /api/users/register  
 
-2. **"Вхід користувача" / "Login User"**
-   - **Метод**: POST
-   - **Ендпоінт**: /api/users/login
-   - **Тіло запиту**:
-     {
-       "email": "string",
-       "password": "string"
-     }
-   - **Відповідь**:
-     {
-       "token": "string",
-       "message": "string"
-     }
+**Вхідні дані:**
+- `firstName` (string): Ім'я користувача
+- `lastName` (string): Прізвище користувача
+- `email` (string): Email користувача
+- `password` (string): Пароль користувача
 
-#### "Управління анкетами" / "Survey Management"
+**Вихідні дані:**
+- `message` (string): Повідомлення про успішну реєстрацію
+- `userId` (integer): Ідентифікатор користувача
 
-3. **"Створення анкети" / "Create Survey"**
-   - **Метод**: POST
-   - **Ендпоінт**: /api/surveys
-   - **Тіло запиту**:
-     {
-       "title": "string",
-       "description": "string"
-     }
-   - **Відповідь**:
-     {
-       "surveyId": "int",
-       "message": "string"
-     }
+### Аутентифікація користувача (User Authentication)
 
-4. **"Додати запитання до анкети" / "Add Question to Survey"**
-   - **Метод**: POST
-   - **Ендпоінт**: /api/surveys/{surveyId}/questions
-   - **Тіло запиту**:
-     {
-       "questionText": "string",
-       "questionType": "string"
-     
-   - **Відповідь**:
-     {
-       "questionId": "int",
-       "message": "string"
-     }
+**Метод:** POST  
+**URL:** /api/users/login  
 
-5. **"Призначення анкети студентам" / "Assign Survey to Students"**
-   - **Метод**: POST
-   - **Ендпоінт**: /api/surveys/{surveyId}/assign
-   - **Тіло запиту**:
-     {
-       "studentIds": ["int"]
-     }
-   - **Відповідь**:
-     {
-       "message": "string"
-     }
+**Вхідні дані:**
+- `email` (string): Email користувача
+- `password` (string): Пароль користувача
 
-#### "Участь у анкетуванні" / "Survey Participation"
+**Вихідні дані:**
+- `message` (string): Повідомлення про успішний вхід
+- `token` (string): Токен для аутентифікації
 
-6. **"Отримати анкету для студента" / "Get Survey for Student"**
-   - **Метод**: GET
-   - **Ендпоінт**: /api/students/{studentId}/surveys
-   - **Відповідь**:
-     {
-       "surveys": [
-         {
-           "surveyId": "int",
-           "title": "string",
-           "description": "string"
-         }
-       ]
-     }
+### Отримання інформації про користувача (Get User Information)
 
-7. **"Надіслати відповіді на анкету" / "Submit Survey Responses"**
-   - **Метод**: POST
-   - **Ендпоінт**: /api/students/{studentId}/surveys/{surveyId}/responses
-   - **Тіло запиту**:
-     {
-       "responses": [
-         {
-           "questionId": "int",
-           "answerText": "string"
-         }
-       ]
-     }
-   - **Відповідь**:
-     {
-       "message": "string"
-     }
+**Метод:** GET  
+**URL:** /api/users/{userId}  
 
-#### "Аналіз відповідей та експорт" / "Response Analysis and Export"
+**Вихідні дані:**
+- `userId` (integer): Ідентифікатор користувача
+- `firstName` (string): Ім'я користувача
+- `lastName` (string): Прізвище користувача
+- `email` (string): Email користувача
+- `surveys` (array): Масив ідентифікаторів анкет, які користувач заповнив
 
-8. **"Отримати результати анкетування" / "Get Survey Results"**
-   - **Метод**: GET
-   - **Ендпоінт**: /api/surveys/{surveyId}/results
-   - **Відповідь**:
-     {
-       "results": [
-         {
-           "studentId": "int",
-           "answers": [
-             {
-               "questionId": "int",
-               "answerText": "string"
-             }
-           ]
-         }
-       ]
-     }
+## Анкети (Surveys)
 
-9. **"Експорт даних анкети" / "Export Survey Data"**
-   - **Метод**: GET
-   - **Ендпоінт**: /api/surveys/{surveyId}/export
-   - **Відповідь**: (Завантаження файлу)
+### Додавання нової анкети (Add New Survey)
 
-#### "Повідомлення та нагадування" / "Notifications and Reminders"
+**Метод:** POST  
+**URL:** /api/surveys  
 
-10. **"Відправити нагадування" / "Send Reminder"**
-    - **Метод**: POST
-    - **Ендпоінт**: /api/notifications/reminder
-    - **Тіло запиту**:
-      {
-        "studentId": "int",
-        "surveyId": "int",
-        "message": "string"
-      }
-    - **Відповідь**:
-      {
-        "message": "string"
-      }
+**Вхідні дані:**
+- `title` (string): Назва анкети
+- `description` (string): Опис анкети
+
+**Вихідні дані:**
+- `message` (string): Повідомлення про успішне додавання анкети
+- `surveyId` (integer): Ідентифікатор нової анкети
+
+### Отримання інформації про анкету (Get Survey Information)
+
+**Метод:** GET  
+**URL:** /api/surveys/{surveyId}  
+
+**Вихідні дані:**
+- `surveyId` (integer): Ідентифікатор анкети
+- `title` (string): Назва анкети
+- `description` (string): Опис анкети
+- `creationDate` (string): Дата створення анкети
+
+### Редагування анкети (Edit Survey)
+
+**Метод:** PUT  
+**URL:** /api/surveys/{surveyId}  
+
+**Вхідні дані:**
+- `title` (string): Нова назва анкети
+- `description` (string): Новий опис анкети
+
+**Вихідні дані:**
+- `message` (string): Повідомлення про успішне редагування анкети
+
+### Видалення анкети (Delete Survey)
+
+**Метод:** DELETE  
+**URL:** /api/surveys/{surveyId}  
+
+**Вихідні дані:**
+- `message` (string): Повідомлення про успішне видалення анкети
+
+## Запитання (Questions)
+
+### Додавання запитання до анкети (Add Question to Survey)
+
+**Метод:** POST  
+**URL:** /api/surveys/{surveyId}/questions  
+
+**Вхідні дані:**
+- `questionText` (string): Текст запитання
+- `questionType` (string): Тип запитання (відкрите, закрите, множинний вибір)
+
+**Вихідні дані:**
+- `message` (string): Повідомлення про успішне додавання запитання
+- `questionId` (integer): Ідентифікатор нового запитання
+
+### Отримання інформації про запитання (Get Question Information)
+
+**Метод:** GET  
+**URL:** /api/questions/{questionId}  
+
+**Вихідні дані:**
+- `questionId` (integer): Ідентифікатор запитання
+- `surveyId` (integer): Ідентифікатор анкети
+- `questionText` (string): Текст запитання
+- `questionType` (string): Тип запитання (відкрите, закрите, множинний вибір)
+
+### Редагування запитання (Edit Question)
+
+**Метод:** PUT  
+**URL:** /api/questions/{questionId}  
+
+**Вхідні дані:**
+- `questionText` (string): Новий текст запитання
+- `questionType` (string): Новий тип запитання (відкрите, закрите, множинний вибір)
+
+**Вихідні дані:**
+- `message` (string): Повідомлення про успішне редагування запитання
+
+### Видалення запитання (Delete Question)
+
+**Метод:** DELETE  
+**URL:** /api/questions/{questionId}  
+
+**Вихідні дані:**
+- `message` (string): Повідомлення про успішне видалення запитання
+
+## Відповіді (Answers)
+
+### Надання відповіді на запитання (Submit Answer)
+
+**Метод:** POST  
+**URL:** /api/surveys/{surveyId}/questions/{questionId}/answers  
+
+**Вхідні дані:**
+- `studentId` (integer): Ідентифікатор студента
+- `answerText` (string): Текст відповіді
+
+**Вихідні дані:**
+- `message` (string): Повідомлення про успішне надання відповіді
+- `answerId` (integer): Ідентифікатор нової відповіді
+
+### Отримання інформації про відповідь (Get Answer Information)
+
+**Метод:** GET  
+**URL:** /api/answers/{answerId}  
+
+**Вихідні дані:**
+- `answerId` (integer): Ідентифікатор відповіді
+- `questionId` (integer): Ідентифікатор запитання
+- `studentId` (integer): Ідентифікатор студента
+- `answerText` (string): Текст відповіді
+
+### Редагування відповіді (Edit Answer)
+
+**Метод:** PUT  
+**URL:** /api/answers/{answerId}  
+
+**Вхідні дані:**
+- `answerText` (string): Новий текст відповіді
+
+**Вихідні дані:**
+- `message` (string): Повідомлення про успішне редагування відповіді
+
+### Видалення відповіді (Delete Answer)
+
+**Метод:** DELETE  
+**URL:** /api/answers/{answerId}  
+
+**Вихідні дані:**
+- `message` (string): Повідомлення про успішне видалення відповіді
+
+## Результати анкетування (Survey Results)
+
+### Отримання результатів анкетування (Get Survey Results)
+
+**Метод:** GET  
+**URL:** /api/surveys/{surveyId}/results  
+
+**Вихідні дані:**
+- `results` (array): Масив об'єктів з результатами анкетування, кожен з яких містить:
+  - `studentId` (integer): Ідентифікатор студента
+  - `answers` (array): Масив відповідей студента, кожна з яких містить:
+    - `questionId` (integer): Ідентифікатор запитання
+    - `answerText` (string): Текст відповіді
+
+### Експорт даних анкетування (Export Survey Data)
+
+**Метод:** GET  
+**URL:** /api/surveys/{surveyId}/export  
+
+**Вихідні дані:** (Завантаження файлу)
+
+## Повідомлення та нагадування (Notifications and Reminders)
+
+### Відправити нагадування (Send Reminder)
+
+**Метод:** POST  
+**URL:** /api/notifications/reminder  
+
+**Вхідні дані:**
+- `studentId` (integer): Ідентифікатор студента
+- `surveyId` (integer): Ідентифікатор анкети
+- `message` (string): Повідомлення нагадування
+
+**Вихідні дані:**
+- `message` (string): Повідомлення про успішне відправлення нагадування
+
 
 ## ER DIAGRAM
 
